@@ -3,6 +3,47 @@ const router = express.Router();
 const projectDB = require('./data/helpers/projectModel');
 const actionDB = require('./data/helpers/actionModel');
 
+
+
+// CREATE r u d 
+router.post('/', (req, res) => {
+    projectDB.insert(req.body)
+        .then(proj => {
+            console.log('*Successfull Post*', proj)
+            res.status(201).json(proj)
+        })
+        .catch(error => {
+            res.status(500).json({
+                error: "There was an error while saving the project to the database"
+            })
+        })
+})
+
+router.post('/:id/actions', (req, res) => {
+    const project_id = req.params.id;
+    const body = req.body;
+    const action = {
+        project_id,
+        description: body.description,
+        notes: body.notes,
+        completed: body.completed
+    }
+    actionDB.insert(action)
+        .then(action => {
+            console.log('*Successfull Post*', action)
+            res.status(201).json(action)
+        })
+        .catch(error => {
+            console.log('error', error)
+            res.status(500).json({
+                error: "There was an error while saving the action to the database"
+            })
+        })
+})
+
+
+
+// c READ u d
 router.get('/', (req, res) => {
     projectDB.get()
         .then(proj => {
