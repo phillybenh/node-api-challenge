@@ -2,10 +2,12 @@ const express = require('express');
 const projectRouter = require('./projectRouter');
 const actionRouter = require('./actionRouter');
 
+var cors = require('cors')
 
 const server = express();
 
 // global middleware
+server.use(cors());
 server.use(express.json());
 
 function logger(req, res, next) {
