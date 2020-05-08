@@ -19,7 +19,7 @@ router.post('/', (req, res) => {
         })
 })
 
-router.post('/:id/actions', (req, res) => {
+router.post('/:id/actions', validateProjID, (req, res) => {
     const project_id = req.params.id;
     const body = req.body;
     const action = {
@@ -67,6 +67,41 @@ router.get('/:id', validateProjID, (req, res) => {
             })
         })
 })
+
+// c r UPDATE d
+router.put('/:id', (req, res) => {
+    projectDB.update(req.params.id, req.body)
+        .then(update => {
+            res.status(200).json(update)
+        })
+        .catch(error => {
+            res.status(500).json({
+                error: "The project information could not be updated."
+            });
+        });
+})
+
+// c r u DELETE
+router.delete('/:id', validateProjID, (req, res) => {
+    projectDB.remove(req.params.id)
+        .then(count => {
+            if (count > 0) {
+                res.status(200).json({
+                    message: "The project has been deleted."
+                });
+            } else {
+                // This shouldn'thappen using the validateProjID middleware
+                res.status(500).json({
+                    error: "The project could not be retrieved."
+                });
+            }
+        })
+        .catch(error => {
+            res.status(500).json({
+                error: "The project could not be retrieved."
+            });
+        })
+} )
 
 // Custom Middleware
 function validateProjID(req, res, next) {
