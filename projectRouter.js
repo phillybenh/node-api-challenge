@@ -67,9 +67,22 @@ router.get('/:id', validateProjID, (req, res) => {
             })
         })
 })
+// Retrieve the list of actions for a project.
+router.get('/:id/projactions', validateProjID, (req, res) => {
+    projectDB.get(req.params.id)
+        .then(proj => {
+            // console.log(proj.actions)
+            res.status(200).json(proj.actions);
+        })
+        .catch(error => {
+            res.status(500).json({
+                error: "The project's actions information could not be retrieved."
+            })
+        })
+})
 
 // c r UPDATE d
-router.put('/:id', (req, res) => {
+router.put('/:id', validateProjID, (req, res) => {
     projectDB.update(req.params.id, req.body)
         .then(update => {
             res.status(200).json(update)
